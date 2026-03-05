@@ -19,8 +19,7 @@ def tirar_dados(jugador):
         elif respuesta.lower()=="n":
             break
     print(f"La tirada final del {jugador} es: {tirada}")
-    return tirada
-
+    return tirada,n
 
 def evaluar_tirada(tirada,jugador):
     tirada.sort()
@@ -74,7 +73,8 @@ def decision(tirada,jugador,tabla):
         puntos=sumarpuntos(tirada)
         tabla[num+3][1]=puntos
     elif dec.lower()=="evaluar":
-        evaluar_tirada(tirada,jugador)
+        generala, poker, full, escalera = evaluar_tirada(tirada,jugador)
+        ntiro=tirada(jugador)[1]
         dsc=input("¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
         while dsc.lower() not in ["1","2","3","4"]:
             dsc=input("Combinación no válida. ¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
@@ -85,10 +85,80 @@ def decision(tirada,jugador,tabla):
             while dsc.lower() not in ["1","2","3","4"]:
                 dsc=input("Combinación no válida. ¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
             dsc=int(dsc)
-        tabla[dsc-1][1]=evaluar_tirada(tirada,jugador)[dsc-1]   
+        if ntiro==0:
+            if dsc==1:
+                if generala == False:
+                    print("No has sacado Generala. No sumas puntos.")
+                    tabla[0][1]=0
+                else:
+                    print("Has sacado Generala Real. Sumás 80 puntos.")
+                    tabla[0][1]=80
+            elif dsc==2:
+                if poker == False:
+                    print("No has sacado Poker. No sumas puntos.")
+                    tabla[1][1]=0
+                else:
+                    print("Has sacado Poker a la primera. Sumás 45 puntos.")
+                    tabla[1][1]=45
+            elif dsc==3:
+                if full == False:
+                    print("No has sacado Full. No sumas puntos.")
+                    tabla[2][1]=0
+                else:
+                    print("Has sacado Full a la primera. Sumás 35 puntos.")
+                    tabla[2][1]=30
+            elif dsc==4:
+                if escalera == False:
+                    print("No has sacado Escalera. No sumas puntos.")
+                    tabla[3][1]=0
+                else:
+                    print("Has sacado Escalera a la primera. Sumás 25 puntos.")
+                    tabla[3][1]=20
+        else:
+            if dsc==1:
+                if generala == False:
+                    print("No has sacado Generala. No sumas puntos.")
+                    tabla[0][1]=0
+                else:
+                    print("Has sacado Generala. Sumás 50 puntos.")
+                    tabla[0][1]=50
+            elif dsc==2:
+                if poker == False:
+                    print("No has sacado Poker. No sumas puntos.")
+                    tabla[1][1]=0
+                else:
+                    print("Has sacado Poker. Sumás 40 puntos.")
+                    tabla[1][1]=40
+            elif dsc==3:
+                if full == False:
+                    print("No has sacado Full. No sumas puntos.")
+                    tabla[2][1]=0
+                else:
+                    print("Has sacado Full. Sumás 30 puntos.")
+                    tabla[2][1]=30
+            elif dsc==4:
+                if escalera == False:
+                    print("No has sacado Escalera. No sumas puntos.")
+                    tabla[3][1]=0
+                else:
+                    print("Has sacado Escalera. Sumás 20 puntos.")
+                    tabla[3][1]=20
+    return tabla
+
 def main():
     tabla1=[["Generala",0],["Poker",0],["Full",0],["Escalera",0],["Puntos 1",0],["Puntos 2",0],["Puntos 3",0],["Puntos 4",0],["Puntos 5",0],["Puntos 6",0]]
     tabla2=[["Generala",0],["Poker",0],["Full",0],["Escalera",0],["Puntos 1",0],["Puntos 2",0],["Puntos 3",0],["Puntos 4",0],["Puntos 5",0],["Puntos 6",0]]
-    tirar_dados("Jugador1")
+    tirada1 = tirar_dados("Jugador1")[0]
+    tabla1=decision(tirada1,"Jugador1",tabla1)
+    print("Tabla del Jugador 1:")
+    for fila in tabla1:
+        print(fila)
+    tirada2 = tirar_dados("Jugador2")[0]
+    tabla2=decision(tirada2,"Jugador2",tabla2)
+    print("Tabla del Jugador 2:")
+    for fila in tabla2:
+        print(fila)
+    
+
 
 main()
