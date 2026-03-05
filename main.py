@@ -60,89 +60,122 @@ def decision(tirada,jugador,tabla):
     while dec.lower() not in ["evaluar","sumar"]:
         dec=input("Decisión no válida. ¿Quieres evaluar tu tirada o sumar puntos? (evaluar/sumar): ")
     if dec.lower()=="sumar":
-        num=input("¿Qué número quieres sumar? (1-6): ")
-        while num not in ["1","2","3","4","5","6"]:
-            num=input("Número no válido. ¿Qué número quieres sumar? (1-6): ")
-        num=int(num)
-        while tabla[num+3][1]!=0:
-            print("Ya has sumado puntos por ese número. Elige otro.")
+        if all(tabla[i][1]!=0 and tabla[i][1]!=-1 for i in range(4,10)):
+            print("Ya has sumado puntos por todos los números. No puedes sumar más puntos.")
+            elegir=input("Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+            while elegir not in ["1","2","3","4","5","6","7","8","9","10"]:
+                elegir=input("Opción no válida. Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+            elegir=int(elegir)
+            while tabla[elegir-1][1]!=0:
+                print("Ya has sumado puntos por esa opción. Elige otra.")
+                elegir=input("Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+                while elegir not in ["1","2","3","4","5","6","7","8","9","10"]:
+                    elegir=input("Opción no válida. Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+                elegir=int(elegir)
+            tabla[elegir-1][1]=-1
+            return tabla
+        else:
             num=input("¿Qué número quieres sumar? (1-6): ")
             while num not in ["1","2","3","4","5","6"]:
                 num=input("Número no válido. ¿Qué número quieres sumar? (1-6): ")
             num=int(num)
-        puntos=sumarpuntos(tirada)
-        tabla[num+3][1]=puntos
+            while tabla[num+3][1]!=0:
+                print("Ya has sumado puntos por ese número. Elige otro.")
+                num=input("¿Qué número quieres sumar? (1-6): ")
+                while num not in ["1","2","3","4","5","6"]:
+                    num=input("Número no válido. ¿Qué número quieres sumar? (1-6): ")
+                num=int(num)
+            puntos=sumarpuntos(tirada)
+            if all(tabla[i][1]!=0 for i in range(4,10)):
+                print("Ya has sumado puntos por todos los números. No puedes sumar más puntos.")
+                puntos=0
+            tabla[num+3][1]=puntos
     elif dec.lower()=="evaluar":
         generala, poker, full, escalera = evaluar_tirada(tirada,jugador)
         ntiro=tirada(jugador)[1]
-        dsc=input("¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
-        while dsc.lower() not in ["1","2","3","4"]:
-            dsc=input("Combinación no válida. ¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
-        dsc=int(dsc)
-        while tabla[dsc-1][1]!=0:
-            print("Ya has evaluado esa combinación. Elige otra.")
+        if all(tabla[i][1]!=0 for i in range(0,4)):
+            print("Ya has evaluado todas las combinaciones especiales. No puedes evaluar más combinaciones.")
+            elegir=input("Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+            while elegir not in ["1","2","3","4","5","6","7","8","9","10"]:
+                elegir=input("Opción no válida. Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+            elegir=int(elegir)
+            while tabla[elegir-1][1]!=0:
+                print("Ya has sumado puntos por esa opción. Elige otra.")
+                elegir=input("Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+                while elegir not in ["1","2","3","4","5","6","7","8","9","10"]:
+                    elegir=input("Opción no válida. Elige que descartar (1-Generala/2-Poker/3-Full/4-Escalera/5-Uno/6-Dos/7-Tres/8-Cuatro/9-Cinco/10-Seis): ")
+                elegir=int(elegir)
+            tabla[elegir-1][1]=-1
+            return tabla
+        else:
             dsc=input("¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
             while dsc.lower() not in ["1","2","3","4"]:
                 dsc=input("Combinación no válida. ¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
             dsc=int(dsc)
-        if ntiro==0:
-            if dsc==1:
-                if generala == False:
-                    print("No has sacado Generala. No sumas puntos.")
-                    tabla[0][1]=0
-                else:
-                    print("Has sacado Generala Real. Sumás 80 puntos.")
-                    tabla[0][1]=80
-            elif dsc==2:
-                if poker == False:
-                    print("No has sacado Poker. No sumas puntos.")
-                    tabla[1][1]=0
-                else:
-                    print("Has sacado Poker a la primera. Sumás 45 puntos.")
-                    tabla[1][1]=45
-            elif dsc==3:
-                if full == False:
-                    print("No has sacado Full. No sumas puntos.")
-                    tabla[2][1]=0
-                else:
-                    print("Has sacado Full a la primera. Sumás 35 puntos.")
-                    tabla[2][1]=30
-            elif dsc==4:
-                if escalera == False:
-                    print("No has sacado Escalera. No sumas puntos.")
-                    tabla[3][1]=0
-                else:
-                    print("Has sacado Escalera a la primera. Sumás 25 puntos.")
-                    tabla[3][1]=20
-        else:
-            if dsc==1:
-                if generala == False:
-                    print("No has sacado Generala. No sumas puntos.")
-                    tabla[0][1]=0
-                else:
-                    print("Has sacado Generala. Sumás 50 puntos.")
-                    tabla[0][1]=50
-            elif dsc==2:
-                if poker == False:
-                    print("No has sacado Poker. No sumas puntos.")
-                    tabla[1][1]=0
-                else:
-                    print("Has sacado Poker. Sumás 40 puntos.")
-                    tabla[1][1]=40
-            elif dsc==3:
-                if full == False:
-                    print("No has sacado Full. No sumas puntos.")
-                    tabla[2][1]=0
-                else:
-                    print("Has sacado Full. Sumás 30 puntos.")
-                    tabla[2][1]=30
-            elif dsc==4:
-                if escalera == False:
-                    print("No has sacado Escalera. No sumas puntos.")
-                    tabla[3][1]=0
-                else:
-                    print("Has sacado Escalera. Sumás 20 puntos.")
-                    tabla[3][1]=20
+            while tabla[dsc-1][1]!=0:
+                print("Ya has evaluado esa combinación. Elige otra.")
+                dsc=input("¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
+                while dsc.lower() not in ["1","2","3","4"]:
+                    dsc=input("Combinación no válida. ¿Qué combinación quieres evaluar? (Escribir el número) (1-Generala/2-Poker/3-Full/4-Escalera): ")
+                dsc=int(dsc)
+            if ntiro==0:
+                if dsc==1:
+                    if generala == False:
+                        print("No has sacado Generala. No sumas puntos.")
+                        tabla[0][1]=0
+                    else:
+                        print("Has sacado Generala Real. Sumás 80 puntos.")
+                        tabla[0][1]=80
+                elif dsc==2:
+                    if poker == False:
+                        print("No has sacado Poker. No sumas puntos.")
+                        tabla[1][1]=0
+                    else:
+                        print("Has sacado Poker a la primera. Sumás 45 puntos.")
+                        tabla[1][1]=45
+                elif dsc==3:
+                    if full == False:
+                        print("No has sacado Full. No sumas puntos.")
+                        tabla[2][1]=0
+                    else:
+                        print("Has sacado Full a la primera. Sumás 35 puntos.")
+                        tabla[2][1]=30
+                elif dsc==4:
+                    if escalera == False:
+                        print("No has sacado Escalera. No sumas puntos.")
+                        tabla[3][1]=0
+                    else:
+                        print("Has sacado Escalera a la primera. Sumás 25 puntos.")
+                        tabla[3][1]=20
+            else:
+                if dsc==1:
+                    if generala == False:
+                        print("No has sacado Generala. No sumas puntos.")
+                        tabla[0][1]=0
+                    else:
+                        print("Has sacado Generala. Sumás 50 puntos.")
+                        tabla[0][1]=50
+                elif dsc==2:
+                    if poker == False:
+                        print("No has sacado Poker. No sumas puntos.")
+                        tabla[1][1]=0
+                    else:
+                        print("Has sacado Poker. Sumás 40 puntos.")
+                        tabla[1][1]=40
+                elif dsc==3:
+                    if full == False:
+                        print("No has sacado Full. No sumas puntos.")
+                        tabla[2][1]=0
+                    else:
+                        print("Has sacado Full. Sumás 30 puntos.")
+                        tabla[2][1]=30
+                elif dsc==4:
+                    if escalera == False:
+                        print("No has sacado Escalera. No sumas puntos.")
+                        tabla[3][1]=0
+                    else:
+                        print("Has sacado Escalera. Sumás 20 puntos.")
+                        tabla[3][1]=20
     return tabla
 
 def main():
