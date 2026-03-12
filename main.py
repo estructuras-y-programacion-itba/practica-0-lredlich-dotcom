@@ -124,7 +124,7 @@ def decision(tirada,jugador,tabla):
                         print("No has sacado Generala. No sumas puntos.")
                         tabla[0][1]=0
                     else:
-                        print("Has sacado Generala Real. Sumás 80 puntos.")
+                        print("Has sacado Generala Real. Sumás 80 puntos, y ganaste el juego!")
                         tabla[0][1]=80
                 elif dsc==2:
                     if poker == False:
@@ -181,17 +181,32 @@ def decision(tirada,jugador,tabla):
 def main():
     tabla1=[["Generala",0],["Poker",0],["Full",0],["Escalera",0],["Puntos 1",0],["Puntos 2",0],["Puntos 3",0],["Puntos 4",0],["Puntos 5",0],["Puntos 6",0]]
     tabla2=[["Generala",0],["Poker",0],["Full",0],["Escalera",0],["Puntos 1",0],["Puntos 2",0],["Puntos 3",0],["Puntos 4",0],["Puntos 5",0],["Puntos 6",0]]
-    tirada1 = tirar_dados("Jugador1")[0]
-    tabla1=decision(tirada1,"Jugador1",tabla1)
-    print("Tabla del Jugador 1:")
-    for fila in tabla1:
-        print(fila)
-    tirada2 = tirar_dados("Jugador2")[0]
-    tabla2=decision(tirada2,"Jugador2",tabla2)
-    print("Tabla del Jugador 2:")
-    for fila in tabla2:
-        print(fila)
     
+    while any(tabla1[i][1]==0 for i in range(10)) or any(tabla2[i][1]==0 for i in range(10)):
+        if tabla1[0][1]==80:
+            print("¡El jugador 1 ha sacado Generala Real! El juego ha terminado.")
+            break
+        elif tabla2[0][1]==80:
+            print("¡El jugador 2 ha sacado Generala Real! El juego ha terminado.")
+            break
+        else:
+            tirada1 = tirar_dados("Jugador1")[0]
+            tabla1=decision(tirada1,"Jugador1",tabla1)
+            print("Tabla del Jugador 1:")
+            for fila in tabla1:
+                print(fila)
+            tirada2 = tirar_dados("Jugador2")[0]
+            tabla2=decision(tirada2,"Jugador2",tabla2)
+            print("Tabla del Jugador 2:")
+            for fila in tabla2:
+                print(fila)
+        print("¡El juego ha terminado!")
+        print("Tabla final del Jugador 1:")
+        for fila in tabla1:
+            print(fila)
+        print("Tabla final del Jugador 2:")
+        for fila in tabla2:
+            print(fila)
 
 
 main()
